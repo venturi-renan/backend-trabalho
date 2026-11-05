@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -81,6 +82,9 @@ export class TasksService {
   async update(taskId: string, userId: string, data: UpdateTaskDto) {
     const task = await this.getTaskForMember(taskId, userId);
     if (data.assigneeId) await this.ensureAssigneeIsMember(task.projectId, data.assigneeId);
+    if (data.status && data.status !== TaskStatus.TODO && data.status !== task.status) {
+      await this.ensureNotBlocked(taskId);
+    }
 
     return this.prisma.task.update({
       where: { id: taskId },
@@ -109,6 +113,20 @@ export class TasksService {
 
     await this.projects.ensureMember(task.projectId, userId);
     return task;
+  }
+
+  private async ensureNotBlocked(taskId: string) {
+    const pending = await this.prisma.task.findMany({
+      where: { dependents: { some: { taskId } }, status: { not: TaskStatus.DONE } },
+      select: { id: true, title: true, status: true },
+    });
+
+    if (pending.length > 0) {
+      throw new ConflictException({
+        message: 'A tarefa está bloqueada por dependências ainda não concluídas',
+        blockedBy: pending,
+      });
+    }
   }
 
   private resolveCompletedAt(current: TaskStatus, next?: TaskStatus) {
