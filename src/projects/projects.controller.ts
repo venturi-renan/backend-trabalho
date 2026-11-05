@@ -10,7 +10,9 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators';
+import { ApiZodBody } from '../common/api-docs';
 import { ZodValidationPipe } from '../common/zod-validation.pipe';
 import {
   AddMemberDto,
@@ -22,11 +24,13 @@ import {
 } from './projects.dto';
 import { ProjectsService } from './projects.service';
 
+@ApiTags('Projetos')
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
+  @ApiZodBody(createProjectSchema)
   create(
     @CurrentUser() user: AuthUser,
     @Body(new ZodValidationPipe(createProjectSchema)) body: CreateProjectDto,
@@ -45,6 +49,7 @@ export class ProjectsController {
   }
 
   @Patch(':id')
+  @ApiZodBody(updateProjectSchema)
   update(
     @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
@@ -65,6 +70,7 @@ export class ProjectsController {
   }
 
   @Post(':id/members')
+  @ApiZodBody(addMemberSchema)
   addMember(
     @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,

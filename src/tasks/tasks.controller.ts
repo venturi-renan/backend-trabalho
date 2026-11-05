@@ -11,7 +11,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators';
+import { ApiZodBody, ApiZodQuery } from '../common/api-docs';
 import { ZodValidationPipe } from '../common/zod-validation.pipe';
 import {
   CreateTaskDto,
@@ -23,11 +25,13 @@ import {
 } from './tasks.dto';
 import { TasksService } from './tasks.service';
 
+@ApiTags('Tarefas')
 @Controller()
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post('projects/:projectId/tasks')
+  @ApiZodBody(createTaskSchema)
   create(
     @CurrentUser() user: AuthUser,
     @Param('projectId', ParseUUIDPipe) projectId: string,
@@ -37,6 +41,7 @@ export class TasksController {
   }
 
   @Get('projects/:projectId/tasks')
+  @ApiZodQuery(listTasksQuerySchema)
   findAll(
     @CurrentUser() user: AuthUser,
     @Param('projectId', ParseUUIDPipe) projectId: string,
@@ -51,6 +56,7 @@ export class TasksController {
   }
 
   @Patch('tasks/:id')
+  @ApiZodBody(updateTaskSchema)
   update(
     @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
