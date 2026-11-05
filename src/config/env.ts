@@ -1,10 +1,5 @@
 import { z } from 'zod';
 
-/**
- * Valida as variáveis de ambiente na inicialização.
- * Se alguma estiver faltando ou inválida, a aplicação nem sobe,
- * o que evita erros difíceis de rastrear em tempo de execução.
- */
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(3000),

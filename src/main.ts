@@ -4,7 +4,6 @@ import { AppModule } from './app.module';
 import { loadEnv } from './config/env';
 
 async function bootstrap() {
-  // Em desenvolvimento lemos o .env; em produção as variáveis vêm do ambiente.
   if (existsSync('.env')) {
     process.loadEnvFile('.env');
   }

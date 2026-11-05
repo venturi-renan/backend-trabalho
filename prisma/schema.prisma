@@ -31,8 +31,6 @@ model User {
   name         String
   email        String   @unique
   passwordHash String   @map("password_hash")
-  /// Quantas horas por semana a pessoa consegue dedicar às tarefas.
-  /// Usado no cálculo de sobrecarga de trabalho.
   weeklyCapacityHours Int @default(40) @map("weekly_capacity_hours")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -89,9 +87,7 @@ model Task {
   assignee User?   @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
   creator  User    @relation("TaskCreator", fields: [creatorId], references: [id])
 
-  /// Tarefas das quais esta depende (precisam ser concluídas antes).
   dependsOn  TaskDependency[] @relation("DependentTask")
-  /// Tarefas que estão esperando esta ser concluída.
   dependents TaskDependency[] @relation("BlockingTask")
 
   @@index([projectId, status])

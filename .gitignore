@@ -4,8 +4,6 @@ coverage/
 .env
 *.log
 
-# Material da disciplina (não versionado)
 *.docx
 
-# Cliente gerado pelo Prisma
 src/generated/
