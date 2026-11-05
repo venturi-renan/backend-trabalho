@@ -6,3 +6,6 @@ coverage/
 
 # Material da disciplina (não versionado)
 *.docx
+
+# Cliente gerado pelo Prisma
+src/generated/
