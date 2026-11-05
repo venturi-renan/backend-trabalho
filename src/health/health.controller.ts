@@ -1,8 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
+import { Public } from '../auth/decorators';
 
+@Public()
 @Controller('health')
 export class HealthController {
-  /** Rota simples para verificar se a API está no ar. */
   @Get()
   check() {
     return { status: 'ok', timestamp: new Date().toISOString() };
