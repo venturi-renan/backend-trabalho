@@ -8,6 +8,7 @@ import { PrioritizationModule } from './prioritization/prioritization.module';
 import { ProjectsModule } from './projects/projects.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
+import { WorkloadModule } from './workload/workload.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UsersModule } from './users/users.module';
     ProjectsModule,
     TasksModule,
     PrioritizationModule,
+    WorkloadModule,
   ],
   controllers: [HealthController],
   providers: [{ provide: APP_FILTER, useClass: PrismaExceptionFilter }],
